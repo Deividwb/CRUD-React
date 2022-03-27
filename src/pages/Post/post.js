@@ -4,6 +4,8 @@ import './styles.css'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
+import axios from 'axios'
+// import { useHistory } from 'react-router-dom'
 
 const validationPost = yup.object().shape({
   title: yup
@@ -18,9 +20,12 @@ const validationPost = yup.object().shape({
     .string()
     .required('O conteudo é obrigatório')
     .max(40, 'O conteúdo precisa ter menos de 500 caracteres'),
+  date: '',
 })
 
 const Post = () => {
+  // let history = useHistory()
+
   const {
     register,
     handleSubmit,
@@ -29,7 +34,15 @@ const Post = () => {
     resolver: yupResolver(validationPost),
   })
 
-  const addPost = (data) => console.log(data)
+  const addPost = (data) =>
+    axios
+      .post(' http://localhost:8000/cruderPost', data)
+      .then(() => {
+        // history.push('/')
+      })
+      .catch(() => {
+        alert('Deu errado')
+      })
 
   return (
     <div>

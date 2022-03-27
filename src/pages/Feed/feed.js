@@ -1,17 +1,35 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import HeaderMain from '../../components/HeaderMain/HeaderMain'
 import './styles.css'
 import More from '../../images/more.svg'
-
-const posts = [
-  {
-    title: 'Deivid vc é fera',
-    description: 'bla bla bla bla bla bla bla bla ',
-  },
-] //apagar
+import axios from 'axios'
 
 const Feed = () => {
+  const [posts, setPosts] = useState([])
+
+  useEffect(() => {
+    axios
+      .get(' http://localhost:8000/cruderPost')
+      .then((response) => {
+        setPosts(response.data)
+      })
+      .catch(() => {
+        alert('Deu errado Feed')
+      })
+  }, [])
+
+  const deletePost = (id) => {
+    axios
+      .delete(`http://localhost:8000/cruderPost${id}`)
+      .then(() => {
+        console.log('Sucesso')
+      })
+      .catch(() => {
+        console.log('Deu errado deletar')
+      })
+  }
+
   return (
     <div>
       <HeaderMain />
@@ -46,9 +64,7 @@ const Feed = () => {
                   </div>
 
                   <div className="btn-delete">
-                    <button onClick={'() => deletePost(post._id)'}>
-                      delete
-                    </button>
+                    <button onClick={() => deletePost(post._id)}>delete</button>
                   </div>
                 </div>
               </div>
