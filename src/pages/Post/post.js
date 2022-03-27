@@ -2,13 +2,32 @@ import React from 'react'
 import Header from '../../components/Header/Header'
 import './styles.css'
 import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+
+const validationPost = yup.object().shape({
+  title: yup
+    .string()
+    .required('O título é obrigatório')
+    .max(40, 'O título precisa ter menos de 40 caracteres'),
+  description: yup
+    .string()
+    .required('A descriçção é obrigatório')
+    .max(40, 'A descrição precisa ter menos de 150 caracteres'),
+  content: yup
+    .string()
+    .required('O conteudo é obrigatório')
+    .max(40, 'O conteúdo precisa ter menos de 500 caracteres'),
+})
 
 const Post = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm()
+  } = useForm({
+    resolver: yupResolver(validationPost),
+  })
 
   const addPost = (data) => console.log(data)
 
@@ -26,7 +45,7 @@ const Post = () => {
               <div className="fields">
                 <label>Título</label>
                 <input type="text" name="title" {...register('title')} />
-                <p className="error-message"></p>
+                <p className="error-message">{errors.title?.message}</p>
               </div>
 
               <div className="fields">
